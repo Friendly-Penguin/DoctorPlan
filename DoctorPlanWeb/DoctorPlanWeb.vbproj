@@ -153,14 +153,16 @@
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Functions\FunctionFile.html" />
     <Content Include="Functions\FunctionFile.js" />
-    <Content Include="Home.css" />
+    <Content Include="Home1.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Home.html" />
     <Content Include="Home.js" />
     <Content Include="Images\AddinIcon.png" />
-    <Content Include="Images\Button16x16.png" />
-    <Content Include="Images\Button32x32.png" />
-    <Content Include="Images\Button80x80.png" />
     <Content Include="Images\Close.png" />
+    <Content Include="Images\medical-report-16.png" />
+    <Content Include="Images\medical-report-32.png" />
+    <Content Include="Images\medical-report-80.png" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
@@ -607,6 +609,8 @@
     <Content Include="Scripts\Office\metadata\endpoints.xml" />
     <Content Include="Scripts\Office\metadata\features.xml" />
     <Content Include="Scripts\Office\MicrosoftAjax.js" />
+    <Content Include="wasm\clingo.web.js" />
+    <Content Include="wasm\clingo.web.worker.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -649,6 +653,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <Content Include="wasm\clingo.wasm" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -662,6 +667,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

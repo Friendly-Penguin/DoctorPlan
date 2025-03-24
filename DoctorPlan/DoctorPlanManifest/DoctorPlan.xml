@@ -11,6 +11,7 @@
 
   <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
   <Id>3dd71447-ffc6-4ab9-999a-1a3cbd8fe0be</Id>
+	
 
   <Version>1.0.0.0</Version>
   <ProviderName>[Provider name]</ProviderName>
@@ -19,8 +20,9 @@
   <DisplayName DefaultValue="DoctorPlan" />
   <Description DefaultValue="DoctorPlan"/>
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
-  <IconUrl DefaultValue="~remoteAppUrl/Images/Button32x32.png" />
+  <IconUrl DefaultValue="~remoteAppUrl/Images/medical-report-32.png" />
 
+	
   <SupportUrl DefaultValue="http://www.contoso.com" />
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
@@ -33,11 +35,13 @@
   <Hosts>
     <Host Name="Workbook" />
   </Hosts>
+	
   <DefaultSettings>
     <SourceLocation DefaultValue="~remoteAppUrl/Home.html" />
   </DefaultSettings>
   <!-- End TaskPane Mode integration.  -->
 
+	<!-- These are the permissions your add-in needs. -->
   <Permissions>ReadWriteDocument</Permissions>
 
   <!-- Begin Add-in Commands Mode integration. -->
@@ -46,87 +50,99 @@
     <!-- The Hosts node is required. -->
     <Hosts>
       <Host xsi:type="Workbook">
-        <DesktopFormFactor>
+        
+		 <DesktopFormFactor>
+			  
           <GetStarted>
-            <Title resid="Contoso.GetStarted.Title"/>
+            <Title resid="Dp.GetStarted.Title"/>
 
-            <Description resid="Contoso.GetStarted.Description"/>
+            <Description resid="Dp.GetStarted.Description"/>
 
-            <LearnMoreUrl resid="Contoso.GetStarted.LearnMoreUrl"/>
+            <LearnMoreUrl resid="Dp.GetStarted.LearnMoreUrl"/>
           </GetStarted>
-          <FunctionFile resid="Contoso.DesktopFunctionFile.Url" />
+			  
+			  
+          <FunctionFile resid="Dp.DesktopFunctionFile.Url" />
 
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <OfficeTab id="TabHome">
-              <Group id="Contoso.Group1">
-                <Label resid="Contoso.Group1Label" />
-                <Icon>
-                  <bt:Image size="16" resid="Contoso.tpicon_16x16" />
-                  <bt:Image size="32" resid="Contoso.tpicon_32x32" />
-                  <bt:Image size="80" resid="Contoso.tpicon_80x80" />
-                </Icon>
 
-                <Control xsi:type="Button" id="Contoso.TaskpaneButton">
-                  <Label resid="Contoso.TaskpaneButton.Label" />
-                  <Supertip>
-                    <Title resid="Contoso.TaskpaneButton.Label" />
-                    <Description resid="Contoso.TaskpaneButton.Tooltip" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Contoso.tpicon_16x16" />
-                    <bt:Image size="32" resid="Contoso.tpicon_32x32" />
-                    <bt:Image size="80" resid="Contoso.tpicon_80x80" />
-                  </Icon>
+			  <CustomTab id="Dp.TabCustom">
+				  <Group id="Dp.Group1">
+					  <Label resid="Dp.Group1Label"/>
+					  <Icon>
+						  <bt:Image size="16" resid="Dp.tpicon_16x16" />
+						  <bt:Image size="32" resid="Dp.tpicon_32x32" />
+						  <bt:Image size="80" resid="Dp.tpicon_80x80" />
+					  </Icon>
+					  <Control xsi:type="Button" id="Dp.TaskpaneButton">
+						  <Label resid="Dp.TaskpaneButton.Label" />
+						  <Supertip>
+							  <Title resid="Dp.TaskpaneButton.Label" />
+							  <Description resid="Dp.TaskpaneButton.Tooltip" />
+						  </Supertip>
+						  <Icon>
+							  <bt:Image size="16" resid="Dp.tpicon_16x16" />
+							  <bt:Image size="32" resid="Dp.tpicon_32x32" />
+							  <bt:Image size="80" resid="Dp.tpicon_80x80" />
+						  </Icon>
+						  <Action xsi:type="ShowTaskpane">
+							  <SourceLocation resid="Dp.Taskpane.Url" />
+						  </Action>
+					  </Control>
+					  <Control xsi:type="Button" id="Dp.FunctionButton">
+						  <Label resid="Dp.FunctionButton.Label" />
+						  <Supertip>
+							  <Title resid="Dp.FunctionButton.Label" />
+							  <Description resid="Dp.FunctionButton.Tooltip" />
+						  </Supertip>
+						  <Icon>
+							  <bt:Image size="16" resid="Dp.tpicon_16x16" />
+							  <bt:Image size="32" resid="Dp.tpicon_32x32" />
+							  <bt:Image size="80" resid="Dp.tpicon_80x80" />
+						  </Icon>
+						  <Action xsi:type="ExecuteFunction">
+							  <FunctionName>sampleFunction</FunctionName>
+						  </Action>
+					  </Control>
+				  </Group>
+				  <Label resid="Dp.TabCustom.Label"/>
+			  </CustomTab>
 
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Contoso.Taskpane.Url" />
-                  </Action>
-                </Control>
-                <Control xsi:type="Button" id="Contoso.FunctionButton">
-                  <Label resid="Contoso.FunctionButton.Label" />
-                  <Supertip>
-                    <Title resid="Contoso.FunctionButton.Label" />
-                    <Description resid="Contoso.FunctionButton.Tooltip" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Contoso.tpicon_16x16" />
-                    <bt:Image size="32" resid="Contoso.tpicon_32x32" />
-                    <bt:Image size="80" resid="Contoso.tpicon_80x80" />
-                  </Icon>
-                  <Action xsi:type="ExecuteFunction">
-                    <FunctionName>sampleFunction</FunctionName>
-                  </Action>
-                </Control>
-              </Group>
-            </OfficeTab>
-          </ExtensionPoint>
-        </DesktopFormFactor>
+
+		  </ExtensionPoint>
+       </DesktopFormFactor>
+		  
       </Host>
     </Hosts>
     
     <Resources>
+		
       <bt:Images>
-        <bt:Image id="Contoso.tpicon_16x16" DefaultValue="~remoteAppUrl/Images/Button16x16.png" />
-        <bt:Image id="Contoso.tpicon_32x32" DefaultValue="~remoteAppUrl/Images/Button32x32.png" />
-        <bt:Image id="Contoso.tpicon_80x80" DefaultValue="~remoteAppUrl/Images/Button80x80.png" />
+        <bt:Image id="Dp.tpicon_16x16" DefaultValue="~remoteAppUrl/Images/medical-report-16.png.png" />
+        <bt:Image id="Dp.tpicon_32x32" DefaultValue="~remoteAppUrl/Images/medical-report-32.png" />
+        <bt:Image id="Dp.tpicon_80x80" DefaultValue="~remoteAppUrl/Images/medical-report-80.png.png" />
       </bt:Images>
+		
       <bt:Urls>
-        <bt:Url id="Contoso.DesktopFunctionFile.Url" DefaultValue="~remoteAppUrl/Functions/FunctionFile.html" />
-        <bt:Url id="Contoso.Taskpane.Url" DefaultValue="~remoteAppUrl/Home.html" />
-        <bt:Url id="Contoso.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
+        <bt:Url id="Dp.DesktopFunctionFile.Url" DefaultValue="~remoteAppUrl/Functions/FunctionFile.html" />
+        <bt:Url id="Dp.Taskpane.Url" DefaultValue="~remoteAppUrl/Home.html" />
+        <bt:Url id="Dp.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
       </bt:Urls>
+		
       <bt:ShortStrings>
-        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Show Taskpane" />
-				<bt:String id="Contoso.FunctionButton.Label" DefaultValue="Run Function" />
-        <bt:String id="Contoso.Group1Label" DefaultValue="Commands Group" />
-        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
+		<bt:String id="Dp.TabCustom.Label" DefaultValue="DoctorPlan" />
+        <bt:String id="Dp.TaskpaneButton.Label" DefaultValue="Show Taskpane" />
+		<bt:String id="Dp.FunctionButton.Label" DefaultValue="Run Function" />
+        <bt:String id="Dp.Group1Label" DefaultValue="Commands Group" />
+        <bt:String id="Dp.GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
       </bt:ShortStrings>
+		
       <bt:LongStrings>
-        <bt:String id="Contoso.FunctionButton.Tooltip" DefaultValue="Click to run a sample function." />
-        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane" />
-        <bt:String id="Contoso.GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started." />
+        <bt:String id="Dp.FunctionButton.Tooltip" DefaultValue="Click to run a sample function." />
+        <bt:String id="Dp.TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane" />
+        <bt:String id="Dp.GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started." />
       </bt:LongStrings>
+		
     </Resources>
   </VersionOverrides>
 
