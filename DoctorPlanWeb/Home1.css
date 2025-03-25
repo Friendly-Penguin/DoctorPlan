@@ -64,7 +64,6 @@ body {
 
 .separatore {
     border: 1px solid;
-    /* Crea una linea orizzontale bianca */
     margin-top: 10px; /* Spazio sopra */
     margin-bottom: 10px; /* Spazio sotto */
     color: white;
@@ -86,9 +85,9 @@ body {
     transition: ease-in 0.2s;
 }
 
-    .funzionalita-button:hover {
-        background-color: oldlace;
-    }
+.funzionalita-button:hover {
+    background-color: oldlace;
+}
 
 .funzionalita-desc {
     width: 70%;
@@ -105,7 +104,7 @@ body {
 }
 
 .funzionalita-elemento2 p {
-    width: 100%;
+     width: 100%;
 }
 
 .parte-superiore {
@@ -118,8 +117,8 @@ body {
 }
 
 .parte-superiore label {
-    width: 70%;
-    color: white;
+     width: 70%;
+     color: white;
 }
 
 .funzionalita-elemento3 {
@@ -146,6 +145,42 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#cancel-table-button {
+    transition: ease-in 0.2s;
+    border: none;
+}
+
+#cancel-table-button:hover {
+    background-color: indianred;
+}
+
+.funzionalita-elemento3 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.funzionalita-elemento3 h2 {
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.funzionalita-elemento3 button {
+     width: 10%;
+     display: flex;
+     transition: ease-in 0.2s;
+     border: none;
+     color: black;
+}
+
+.funzionalita-elemento3 button:hover {
+     background-color: #cb7e46;
 }
 
 .footer {

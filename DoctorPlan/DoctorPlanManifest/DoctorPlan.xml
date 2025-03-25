@@ -89,21 +89,6 @@
 							  <SourceLocation resid="Dp.Taskpane.Url" />
 						  </Action>
 					  </Control>
-					  <Control xsi:type="Button" id="Dp.FunctionButton">
-						  <Label resid="Dp.FunctionButton.Label" />
-						  <Supertip>
-							  <Title resid="Dp.FunctionButton.Label" />
-							  <Description resid="Dp.FunctionButton.Tooltip" />
-						  </Supertip>
-						  <Icon>
-							  <bt:Image size="16" resid="Dp.tpicon_16x16" />
-							  <bt:Image size="32" resid="Dp.tpicon_32x32" />
-							  <bt:Image size="80" resid="Dp.tpicon_80x80" />
-						  </Icon>
-						  <Action xsi:type="ExecuteFunction">
-							  <FunctionName>sampleFunction</FunctionName>
-						  </Action>
-					  </Control>
 				  </Group>
 				  <Label resid="Dp.TabCustom.Label"/>
 			  </CustomTab>

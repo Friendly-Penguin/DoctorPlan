@@ -34,20 +34,12 @@ let messageBanner;
             // Gestore per il pulsante di conferma nel form
             $('#confirm-table-button').on('click', function () {
                 // Ottieni il numero di righe dal campo di input
-                const rows = parseInt($('#table-rows').val()) || 3; // Default a 3 se non valido
-
-                // Nascondi il form
-                $('#table-config').hide();
+                const rows = parseInt($('#table-rows').val()) || 2; // Default a 2 se non valido
 
                 // Crea la tabella con il numero di righe specificato
                 createSurgeonShiftTable(rows);
             });
 
-            //// Gestore per il pulsante di annullamento
-            //$('#cancel-table-button').on('click', function () {
-            //    // Nascondi il form senza fare nulla
-            //    $('#table-config').hide();
-            //});
 
             $('#btnRisolvi').on('click', risolviClingo);
 
@@ -63,7 +55,7 @@ function errorHandler(error) {
         if (error instanceof OfficeExtension.Error) {
             console.log("Debug info: " + JSON.stringify(error.debugInfo));
         }
-    }
+}
 
 // Helper function for displaying notifications
 function showNotification(header, content) {
@@ -71,9 +63,9 @@ function showNotification(header, content) {
         $("#notification-body").text(content);
         messageBanner.showBanner();
         messageBanner.toggleExpansion();
-    }
+}
 
-// Definisci la funzione writeHelloWorld fuori dal blocco onReady
+// Funzione writeHelloWorld 
 function helloWorld() {
     Excel.run(function (context) {
         // Ottieni la cella A1
@@ -84,16 +76,16 @@ function helloWorld() {
 
         // Applica le modifiche
         return context.sync();
+
     }).catch(function (error) {
-        console.log("Error: " + error);
-        showNotification("Error", error);
+        errorHandler(error);
     });
 }
 
-// Modifichiamo la funzione createSurgeonShiftTable per accettare il numero di righe
+// Funzione per creare una tabella con chirurghi e turni
 function createSurgeonShiftTable(numRows) {
     Excel.run(function (context) {
-        // Ottieni il foglio di lavoro attivo
+        // Recuperiamo il foglio di lavoro attivo
         var sheet = context.workbook.worksheets.getActiveWorksheet();
 
         // Definiamo il range per la tabella (iniziamo dalla cella A1)
@@ -108,14 +100,14 @@ function createSurgeonShiftTable(numRows) {
         headerRange.format.font.color = "white";
 
         // Calcoliamo il range della tabella completa
-        var fullRangeAddress = "A1:B" + (numRows + 1); // +1 perché la prima riga è l'intestazione
+        var fullRangeAddress = "A1:B" + (numRows + 1);
         var fullRange = sheet.getRange(fullRangeAddress);
 
         // Crea una tabella con le intestazioni
         var table = sheet.tables.add(fullRange, true);
         table.name = "TabellaChirurghiTurni";
 
-        // Aggiustiamo la larghezza delle colonne
+        // Sistemo la larghezza delle colonne per visualizzare meglio i dati
         sheet.getRange("A:A").format.columnWidth = 150;
         sheet.getRange("B:B").format.columnWidth = 150;
 
@@ -125,25 +117,30 @@ function createSurgeonShiftTable(numRows) {
             data.push(["", ""]);
         }
 
-        // Se vogliamo pre-compilare con alcuni esempi (opzionale)
-        if (data.length >= 1) data[0] = ["luigi", "mattina"];
-        if (data.length >= 2) data[1] = ["antonio", "pomeriggio"];
-        
-
         // Aggiungiamo le righe alla tabella
         if (numRows > 0) {
             var dataRange = sheet.getRange("A2:B" + (numRows + 1));
             dataRange.values = data;
         }
 
-
+        // Nella colonna "Turni" voglio obbligare l'utente a scegliere tra le opzioni suggerite
+        var shiftRange = sheet.getRange("B2:B" + (numRows + 1));
+        var validation = shiftRange.dataValidation;
+        validation.rule = {
+            list: {
+                inCellDropDown: true,
+                source: "mattina,pomeriggio,sera"
+            }
+        };
 
         return context.sync();
+
     }).catch(function (error) {
-        console.log("Error: " + error);
+        errorHandler(error)
     });
 }
 
+// Funzione per eliminare la tabella con intestazione "Chirurghi" e "Turni"
 function deleteTable() {
     Excel.run(async function (context) {
         var sheet = context.workbook.worksheets.getActiveWorksheet();
@@ -177,7 +174,7 @@ function deleteTable() {
     });
 }
 
-/*
+/* Test di Clingo per verificarne l'esatto funzionamento
 async function runClingo() {
     try {
         // Verifica che 'clingo' sia definito
@@ -211,6 +208,7 @@ async function runClingo() {
 }
 */
 
+// Funzione che gestisce la risoluzione del problema dei turni dei chirurghi
 async function risolviClingo() {
     try {
         // 1. Lettura dati da Excel
@@ -221,8 +219,6 @@ async function risolviClingo() {
             console.error("Errore: Nessuna tabella trovata o nessun dato letto.");
             return; // Esci dalla funzione se non ci sono dati
         }
-
-        console.log("Dati letti da Excel");
 
         // 2. Creazione File con dati da passare a clingo
         await scriviDatiToNuovoFoglio(datiTurni);
@@ -236,20 +232,19 @@ async function risolviClingo() {
             return; // Esci dalla funzione se non ci sono dati
         }
 
-        console.log("Dati letti dal foglio:", dati);
+        // 4. Eseguo Clingo
+        let risposta = await eseguiClingoWasm(dati); 
 
-        //4. Eseguire Clingo
-        let risposta = await eseguiClingoWasm(dati); // Qui puoi eseguire Clingo con i dati
-
-        //5. Mostri i risultati
+        // 5. Mostri i risultati
         console.log(risposta);
         mostraRisultati(risposta);
 
     } catch (error) {
-        console.error("Errore durante l'esecuzione: " + error);
+        errorHandler(error);
     }
 }
 
+// Funzione per la lettura dei dati da Excel
 async function leggiDatiTurni() {
     return Excel.run(async (context) => {
         var sheet = context.workbook.worksheets.getActiveWorksheet();
@@ -284,13 +279,14 @@ async function leggiDatiTurni() {
     });
 }
 
+// Funzione per scrivere i dati in un nuovo foglio creato appositamente
 async function scriviDatiToNuovoFoglio(dati) {
     return Excel.run(async (context) => {
         // Aggiungi un nuovo foglio di lavoro
         const nuovoFoglio = context.workbook.worksheets.add("Risultati Formattati");
 
         // Crea l'intervallo dinamicamente in base al numero di righe
-        const intervalloRisultati = nuovoFoglio.getRange("A1").getResizedRange(dati.length - 1, 0); // Numero di righe = dati.length, una colonna (colonna A)
+        const intervalloRisultati = nuovoFoglio.getRange("A1").getResizedRange(dati.length - 1, 0);
 
         // Formatta i dati nel formato "(nome chirurgo, turno)"
         const datiFormattati = dati.map(row => {
@@ -305,73 +301,25 @@ async function scriviDatiToNuovoFoglio(dati) {
     });
 }
 
-async function eseguiClingoWasm(datiFormattati) {
-    try {
-        // Inizializza Clingo con il file WASM (opzionale, se necessario)
-        await clingo.init("https://cdn.jsdelivr.net/npm/clingo-wasm@0.2.1/dist/clingo.wasm");
-
-        // Prepara il programma di Clingo di base
-        const scriptClingo = `
-giorno(lun).
-giorno(mar).
-giorno(mer).
-giorno(giov).
-
-1={orario(Chirurgo,G):chirurgo(Chirurgo,_)} :- giorno(G).
-        `;
-
-        // Modifica i dati letti in regole valide per Clingo
-        const datiClingo = datiFormattati.map((entry) => {
-            // Parsa la stringa come (nome, turno) e formatta correttamente
-            const match = entry.match(/^\(([^,]+),\s*([^,]+)\)\.$/);
-            if (match) {
-                const chirurgo = match[1].trim().replace(/['"]+/g, ''); // Rimuovi eventuali virgolette
-                const turno = match[2].trim().replace(/['"]+/g, ''); // Rimuovi eventuali virgolette
-
-                // Verifica se ci sono dati validi (evita vuoti)
-                if (chirurgo && turno) {
-                    return `
-chirurgo('${chirurgo}', ${turno}).
-                `;
-                }
-            }
-            return ''; // Se il formato non è valido o vuoto, ritorna una stringa vuota
-        }).join("\n");
-
-        // Combina il programma di Clingo con i dati formattati
-        const programmaCompleto = scriptClingo + "\n" + datiClingo;
-
-        console.log("Programma completo di Clingo:", programmaCompleto);
-
-        // Esegui il programma di Clingo
-        const risultato = await clingo.run(programmaCompleto);
-        console.log("Risultato di Clingo:", risultato);
-
-        return risultato;
-    } catch (error) {
-        console.error("Errore durante l'esecuzione di Clingo:", error);
-    }
-}
-
+// Funzione per leggere i dati dal foglio (potrebbe essere evitata caricando direttamente i dati nella funzione precedente)
 async function leggiDatiDalFoglio() {
     return Excel.run(async (context) => {
-        // Ottieni il foglio "Risultati Formattati"
+        // Recupero il foglio "Risultati Formattati"
         const sheet = context.workbook.worksheets.getItem("Risultati Formattati");
 
-        // Partiamo dalla cella A1
-        let riga = 1; // Comincia dalla riga 1
+        let riga = 1; 
         let datiLetti = [];
 
         while (true) {
-            // Ottieni la cella corrente nella colonna A (ad esempio, A1, A2, A3, ...)
+            
             const range = sheet.getRange(`A${riga}`);
             range.load("values");
 
-            await context.sync(); // Sincronizza per caricare i dati dalla cella
+            await context.sync(); 
 
-            // Se la cella è vuota, esci dal ciclo
+            // Se la cella è vuota, esco dal ciclo
             if (range.values[0][0] === "" || range.values[0][0] === null) {
-                break; // Esci dal ciclo se la cella è vuota
+                break; 
             }
 
             // Aggiungi il valore della cella all'array dei dati
@@ -380,15 +328,69 @@ async function leggiDatiDalFoglio() {
             // Incrementa la riga per leggere la successiva
             riga++;
         }
-
-        // Restituisci i dati letti
         return datiLetti;
     });
 }
 
+// Funzione per eseguire Clingo con i dati letti dal foglio
+async function eseguiClingoWasm(datiFormattati) {
+    try {
+        // Inizializza Clingo con il file WASM 
+        await clingo.init("https://cdn.jsdelivr.net/npm/clingo-wasm@0.2.1/dist/clingo.wasm");
+
+        // Preparo il programma di Clingo di base
+        const scriptClingo = `
+giorno(lun).
+giorno(mar).
+giorno(mer).
+giorno(giov).
+giorno(ven).
+giorno(sab).
+
+1={orario(Chirurgo,G):chirurgo(Chirurgo,_)} :- giorno(G).
+        `;
+
+         // Modifico i dati letti dal foglio in regole valide per Clingo
+         const datiClingo = datiFormattati.map((entry) => {
+
+             
+            const match = entry.match(/^\(([^,]+),\s*([^,]+)\)\.$/);
+
+             if (match) {
+
+                const chirurgo = match[1].trim().replace(/['"]+/g, ''); 
+                const turno = match[2].trim().replace(/['"]+/g, ''); 
+
+                // Faccio un controllo sui dati letti per evitare dati vuoti
+                if (chirurgo && turno) {
+                    return `
+chirurgo('${chirurgo}', ${turno}).
+                `;
+                }
+            }
+             return ''; // In caso di dati non validi, restituisco una stringa vuota
+        }).join("\n");
+
+        // Creo il programma completo di Clingo
+        const programmaCompleto = scriptClingo + "\n" + datiClingo;
+
+        console.log("Programma completo di Clingo:", programmaCompleto);
+
+        // Eseguo lo script
+        const risultato = await clingo.run(programmaCompleto);
+        console.log("Risultato di Clingo:", risultato);
+
+        return risultato;
+    } catch (error) {
+        errorHandler(error);
+    }
+}
+
+// Funzione per mostrare i risultati di Clingo in un nuovo foglio creato appositamente
 async function mostraRisultati(risultatoClingo) {
     try {
         await Excel.run(async (context) => {
+            // Recupero tutti i fogli di lavoro ed elimino quello "Temporaneo" creato per i dati
             const fogli = context.workbook.worksheets;
             const foglioEsistente = fogli.getItemOrNullObject("Risultati Formattati");
             await context.sync();
@@ -397,17 +399,18 @@ async function mostraRisultati(risultatoClingo) {
                 foglioEsistente.delete();
             }
 
+            //Creo un nuovo foglio per i risultati
             const nuovoFoglio = context.workbook.worksheets.add("Orario");
 
-            // Estrai i witnesses
-            const witnesses = risultatoClingo.Call[0].Witnesses;
+            
+            const risultato = risultatoClingo.Call[0].Witnesses;
 
             // Prepara i dati
             let datiFormattati = [];
 
-            if (witnesses && witnesses.length > 0) {
-                // Estrai i valori dal primo witness
-                datiFormattati = witnesses[0].Value.map(valore => [valore]);
+            if (risultato && risultato.length > 0) {
+                // Estrai i valori dal primo risutato
+                datiFormattati = risultato[0].Value.map(valore => [valore]);
             }
 
             // Aggiungi intestazione
@@ -424,7 +427,6 @@ async function mostraRisultati(risultatoClingo) {
             console.log("Nuovo foglio con i risultati di Clingo creato.");
         });
     } catch (error) {
-        console.error("Errore durante la sostituzione del foglio:", error);
-        console.error("Dettagli errore:", JSON.stringify(error));
+        errorHandler(error);
     }
 }
