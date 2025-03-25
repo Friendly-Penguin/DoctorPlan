@@ -122,6 +122,10 @@ body {
     color: white;
 }
 
+.funzionalita-elemento3 {
+    color: white;
+}
+
 #table-rows {
     display: flex;
     width: 12%;

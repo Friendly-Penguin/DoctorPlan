@@ -609,8 +609,6 @@
     <Content Include="Scripts\Office\metadata\endpoints.xml" />
     <Content Include="Scripts\Office\metadata\features.xml" />
     <Content Include="Scripts\Office\MicrosoftAjax.js" />
-    <Content Include="wasm\clingo.web.js" />
-    <Content Include="wasm\clingo.web.worker.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -653,7 +651,6 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <Content Include="wasm\clingo.wasm" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
