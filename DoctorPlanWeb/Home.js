@@ -402,26 +402,21 @@ async function mostraRisultati(risultatoClingo) {
             //Creo un nuovo foglio per i risultati
             const nuovoFoglio = context.workbook.worksheets.add("Orario");
 
+            // Converto i risultati in stringhe leggibili
+            const output1 = JSON.stringify(risultatoClingo);
+
             
-            const risultato = risultatoClingo.Call[0].Witnesses;
+            // Aggiungo un' intestazione
+            const intestazione = [["Risultati"]];
 
-            // Prepara i dati
-            let datiFormattati = [];
-
-            if (risultato && risultato.length > 0) {
-                // Estrai i valori dal primo risutato
-                datiFormattati = risultato[0].Value.map(valore => [valore]);
-            }
-
-            // Aggiungi intestazione
-            const intestazioni = [["Risultati"]];
-            datiFormattati = intestazioni.concat(datiFormattati);
-
-            // Ottieni l'intervallo
-            const intervalloRisultati = nuovoFoglio.getRange(`A1:A${datiFormattati.length}`);
-
-            // Imposta i valori
-            intervalloRisultati.values = datiFormattati;
+            // Scrivo i risultati
+            nuovoFoglio.getRange("A1").values = intestazione;
+            const cella = nuovoFoglio.getRange("A2");
+            cella.values = [[output1]];
+            cella.format.wrapText = true;
+            cella.format.columnWidth = 350;
+            cella.format.rowHeight = 150;
+            
 
             await context.sync();
             console.log("Nuovo foglio con i risultati di Clingo creato.");
